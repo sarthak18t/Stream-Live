@@ -60,7 +60,6 @@ export async function POST(req: Request) {
         externalUserID: payload.data.id,
         imageURL : payload.data.image_url,
         username : payload.data.username,
-        bio : payload.data.first_name
       },
     });
   }

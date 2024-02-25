@@ -15,8 +15,7 @@ model User {
   username String @unique
   imageURL String @db.Text
   externalUserID String @unique
-  bio String? @db.Text
-
+  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt 
 }
