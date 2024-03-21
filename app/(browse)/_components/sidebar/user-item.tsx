@@ -5,12 +5,15 @@ import { useSidebar } from "@/store/use-sidebar";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import UserAvatar from "@/components/user-avatar";
+
 
 interface UserItemProps {
   username: string;
   imageURL: string;
   isLive?: boolean;
 }
+
 const UserItem = ({ username, imageURL, isLive }: UserItemProps) => {
   const pathname = usePathname();
   const { collapsed } = useSidebar((state) => state);
@@ -26,15 +29,16 @@ const UserItem = ({ username, imageURL, isLive }: UserItemProps) => {
         isActive && "bg-accent"
       )}
     >
-      <Link href={href}>
+      <Link href={href} className="flex flex-row items-center justify-between gap-x-4">
         <div
           className={cn(
             "flex items-center w-full gap-x-4",
             collapsed && "justify-center"
           )}
         >
-          dfs
+          <UserAvatar username={username} imageURL={imageURL} isLive={true}  />
         </div>
+    {!collapsed && <p className="text-sm truncate w-full">{username}</p>}
       </Link>
     </Button>
   );
