@@ -1,27 +1,33 @@
 "use client";
-import React from "react";
+
 import { User } from "@prisma/client";
+
 import { useSidebar } from "@/store/use-sidebar";
-import UserItem from "./user-item";
+
+import { UserItem, UserItemSkeleton } from "./user-item";
+
 interface RecommendedProps {
-  data: User[];
+  data: (User)[];
 }
-const Recommended = ({ data }: RecommendedProps) => {
+
+export const Recommended = ({ data }: RecommendedProps) => {
   const { collapsed } = useSidebar((state) => state);
-  const showRecommended = !collapsed && data.length > 0;
+
+  const showLabel = !collapsed && data.length > 0;
+
   return (
     <div>
-      {showRecommended && (
+      {showLabel && (
         <div className="pl-6 mb-4">
-          <p className="text-muted-foreground text-sm">Recommended</p>
+          <p className="text-sm text-muted-foreground">Recommended</p>
         </div>
       )}
-      <ul>
+      <ul className="space-y-2 px-2">
         {data.map((user) => (
           <UserItem
             key={user.id}
             username={user.username}
-            imageURL={user.imageURL}
+            imageUrl={user.imageURL}
             isLive={true}
           />
         ))}
@@ -30,4 +36,12 @@ const Recommended = ({ data }: RecommendedProps) => {
   );
 };
 
-export default Recommended;
+export const RecommendedSkeleton = () => {
+  return (
+    <ul className="px-2">
+      {[...Array(3)].map((_, i) => (
+        <UserItemSkeleton key={i} />
+      ))}
+    </ul>
+  );
+};

@@ -79,7 +79,6 @@ export async function POST(req: Request) {
         data : {
             imageURL : payload.data.image_url,
             username : payload.data.username,
-            bio : payload.data.first_name,
             externalUserID : payload.data.id
         }
     })

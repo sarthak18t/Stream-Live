@@ -1,47 +1,62 @@
-import React from "react";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
-import { useSidebar } from "@/store/use-sidebar";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
-import UserAvatar from "@/components/user-avatar";
+"use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { useSidebar } from "@/store/use-sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
+import { UserAvatar } from "@/components/user-avatar";
+import { LiveBadge } from "@/components/live-badge";
 
 interface UserItemProps {
   username: string;
-  imageURL: string;
+  imageUrl: string;
   isLive?: boolean;
 }
 
-const UserItem = ({ username, imageURL, isLive }: UserItemProps) => {
+export const UserItem = ({ username, imageUrl, isLive }: UserItemProps) => {
   const pathname = usePathname();
+
   const { collapsed } = useSidebar((state) => state);
-  console.log(pathname);
+
   const href = `/${username}`;
   const isActive = pathname === href;
+
   return (
     <Button
+      asChild
       variant="ghost"
       className={cn(
         "w-full h-12",
-        collapsed ? "justify-center" : "justify-start",
+        collapsed ? "justify-center" : "justfy-start",
         isActive && "bg-accent"
       )}
     >
-      <Link href={href} className="flex flex-row items-center justify-between gap-x-4">
+      <Link href={href}>
         <div
           className={cn(
             "flex items-center w-full gap-x-4",
             collapsed && "justify-center"
           )}
         >
-          <UserAvatar username={username} imageURL={imageURL} isLive={true}  />
+          <UserAvatar imageUrl={imageUrl} username={username} isLive={isLive} />
+          {!collapsed && <p className="truncate">{username}</p>}
+          {!collapsed && isLive && <LiveBadge className="ml-auto" />}
         </div>
-    {!collapsed && <p className="text-sm truncate w-full">{username}</p>}
       </Link>
     </Button>
   );
 };
 
-export default UserItem;
+export const UserItemSkeleton = () => {
+  return (
+    <li className="flex items-center gap-x-4 px-3 py-2">
+      <Skeleton className="min-h-[32px] min-w-[32px] rounded-full" />
+      <div className="flex-1">
+        <Skeleton className="h-6" />
+      </div>
+    </li>
+  );
+};
