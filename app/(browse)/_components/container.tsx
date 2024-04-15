@@ -19,7 +19,7 @@ const Container = ({ children }: { children: React.ReactNode }) => {
   },[matches,onCollapse,onExpand])
 
   return (
-    <div className={cn("flex-1", collapsed ? "w-[70px]" : "w-[70px] lg:w-60")}>
+    <div className={cn("flex-1", collapsed ? "ml-[70px]" : "ml-60")}>
       {children}
     </div>
   );
