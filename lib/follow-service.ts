@@ -3,6 +3,18 @@ import getSelf from "./auth-service";
 import { currentUser } from "@clerk/nextjs";
 import { AwardIcon } from "lucide-react";
 
+export const getFollowedUsers = async () => {
+    try {
+      const self  = await getSelf();
+      const followedUser =  db.follow.findMany({
+        where: {followerId:self.id},
+        include:{following: true}
+      })
+      return followedUser
+    } catch (error) {
+      return []
+    }
+}
 export const isFollowingUser = async (userId: string) => {
   try {
     const self = await getSelf();
