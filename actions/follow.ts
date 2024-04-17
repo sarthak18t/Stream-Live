@@ -1,8 +1,18 @@
 "use server"
-export const onFollow = (id:string)=>{
+
+import { followUser } from "@/lib/follow-service"
+import { revalidatePath } from "next/cache";
+
+export const onFollow = async(id:string)=>{
     try {
-        console.log("onFollow", id)
-    } catch (error) {
-        throw new Error("Internal error")
+        const followedUser = await followUser(id);
+
+        revalidatePath("/")
+        if(followedUser)revalidatePath(`/${followedUser.following.username}`)
+        
+        return followedUser
+    } catch (error:any) {
+        console.log(error)
+        throw new Error("Internal error",error)
     }
 }

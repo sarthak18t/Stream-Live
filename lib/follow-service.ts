@@ -10,7 +10,7 @@ export const isFollowingUser = async (userId: string) => {
       where: { id: userId },
     });
 
-    if (!user) return "User not found";
+    if (!user) throw new Error("User not found");
     if (user.id === self.id) return true;
 
     const existingFollow = await db.follow.findFirst({
@@ -35,20 +35,29 @@ export const followUser = async (userId: string) => {
   if(!user)throw new Error("User not found")
   if(!self)throw new Error("Unauthorized")
 
-  if(user.id === self.id)throw new Error("Cannot follow yourself")
+    const selfUser = await db.user.findUnique({
+        where:{
+          externalUserID : self.id
+        }
+    })
+
+  if(!selfUser) throw new Error("User not found")
+
+  if(user.id === selfUser.id)throw new Error("Cannot follow yourself")
   
   const existingFollow = await db.follow.findFirst({
     where:{
-        followerId: self.id,
+        followerId: selfUser.id,
         followingId: user.id
     }
   })
 
   if(existingFollow)throw new Error("Already following")
-
+    
+    console.log(selfUser.id)
   const follow = await db.follow.create({
     data:{
-        followerId: self.id,
+        followerId: selfUser.id,
         followingId: user.id
     },
     include:{
@@ -56,6 +65,5 @@ export const followUser = async (userId: string) => {
         follower:true
     }
   })
-
   return follow
 }

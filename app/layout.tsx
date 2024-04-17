@@ -4,6 +4,8 @@ import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "sonner";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -20,7 +22,14 @@ export default function RootLayout({
     <ClerkProvider appearance={{ baseTheme: dark }}>
       <html lang="en">
         <body className={inter.className}>
-      <ThemeProvider attribute="class" defaultTheme="dark" storageKey="streamlive">{children}</ThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            storageKey="streamlive"
+          >
+            <Toaster  position="bottom-center" theme="light"/>
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>

@@ -11,32 +11,33 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  username String @unique
-  imageURL String @db.Text
-  externalUserID String @unique
+  id              String    @id @default(uuid())
+  username        String    @unique
+  imageURL        String    @db.Text
+  externalUserID  String    @unique
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt 
 
-  following Follow[] @relation("Following")
-  followedBy Follow[] @relation("FollowedBy")
+  // Define the relation for users that this user is following
+  following       Follow[]  @relation("Following")
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
-
+  // Define the relation for users following this user
+  followedBy      Follow[]  @relation("FollowedBy")
 }
 
 model Follow {
-  id String @id @default(uuid())
-  followerId String
-  followingId String
-
-  follower User @relation(name: "Following" ,fields: [followerId] ,references: [id],onDelete: Cascade)
-  following User @relation(name: "FollowedBy" ,fields: [followingId] ,references: [id],onDelete: Cascade)
-
+  id              String    @id @default(uuid())
+  followerId      String
+  followingId     String
+  
+  // Define the relation for the user who is following
+  follower        User      @relation("Following", fields: [followerId], references: [id])
+  
+  // Define the relation for the user who is being followed
+  following       User      @relation("FollowedBy", fields: [followingId], references: [id])
+  
   @@unique([followerId, followingId])
-
-  @@index([followerId])
-  @@index([followingId]) 
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt 
+  @@index([followingId, followerId])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt 
 }
